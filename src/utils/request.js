@@ -61,6 +61,31 @@ class request {
     return this.fetchData(path, 'DELETE', params);
   }
 
+  static uploadFile(file) {
+    let token = getAuthority();
+    let url = this.BASE_URL + 'image/upload';
+    let config = {
+      'Authorization': token,
+    };
+    let params = new FormData();
+    params.append('file', file, file.name);
+    return fetch(url, {
+      headers: config,
+      method: 'POST',
+      body: params,
+    }).then(data => data.json())
+      .then(data => {
+        if (data.status) {
+          errorHandler(data);
+        } else return data;
+      })
+      .catch(err => {
+        console.log('err: --->');
+        console.log(err);
+      });
+  }
+
+
   static fetchData(path, type, params) {
     let token = getAuthority();
     let url = this.BASE_URL + path;

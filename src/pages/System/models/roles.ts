@@ -98,7 +98,7 @@ export default {
     },
 
     * deleteRole({ playload }, { call, put }) {
-      let deleted = yield call(deleteRole, playload);
+      let deleted = yield call(deleteRole, playload.id);
       let response;
       if (deleted != undefined) {
         notification.success({

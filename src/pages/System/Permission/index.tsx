@@ -65,7 +65,7 @@ class PermissionPage extends PureComponent<{ permissions, dispatch },
     });
     this.props.dispatch({
       type: 'permissions/deletePermission',
-      playload: item.id,
+      playload: item,
     });
   };
 

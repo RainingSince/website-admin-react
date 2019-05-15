@@ -70,6 +70,7 @@ class SelectRole extends PureComponent<{
 
 
     return <Row type="flex" justify="center">
+      // @ts-ignore
       <Transfer
         rowKey={(record: Role) => record.id}
         dataSource={roles}

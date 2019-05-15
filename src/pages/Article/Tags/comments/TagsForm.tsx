@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 
-
+const defaultDetail = { name: '', remark: '', sort: '' };
 
 // @ts-ignore
 @Form.create({
@@ -17,23 +17,27 @@ import { Button, Form, Input } from 'antd';
         // @ts-ignore
         value: props.dataSource.remark,
       }),
+      sort: Form.createFormField({
+        name: 'sort',
+        // @ts-ignore
+        value: props.dataSource.sort,
+      }),
     };
   },
 })
-class RoleForm extends React.Component<{
-  submitClick, cancelClick, dataSource, form, dispatch, detail
+class TagsForm extends React.Component<{
+  submitClick, cancelClick, dataSource, form
 }, {}> {
-
   static defaultProps = {
     form: undefined,
-    detail: { name: '', remark: '' },
     dispatch: undefined,
-    dataSource: { name: '', remark: '' },
+    dataSource: defaultDetail,
   };
 
   onSubmit = () => {
     this.props.form.validateFieldsAndScroll();
-    let err = this.props.form.getFieldsError(['name']);
+    let err = this.props.form.getFieldsError(Object.keys(defaultDetail));
+    console.log(this.props.form.getFieldsValue());
     if (!err.name)
       this.props.submitClick(this.props.dataSource.id ?
         'update' : 'add', Object.assign(this.props.dataSource, this.props.form.getFieldsValue()));
@@ -41,7 +45,6 @@ class RoleForm extends React.Component<{
 
 
   render() {
-
     const { getFieldDecorator } = this.props.form;
 
     return <div>
@@ -50,12 +53,17 @@ class RoleForm extends React.Component<{
 
         <Form.Item label="名称">
           {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please enter role name' }],
-          })(<Input placeholder="请输入角色名称"/>)}
+            rules: [{ required: true, message: 'Please enter tag name' }],
+          })(<Input placeholder="请输入标签名称"/>)}
+        </Form.Item>
+
+
+        <Form.Item label="排序">
+          {getFieldDecorator('sort')(<Input placeholder="请输入标签排序"/>)}
         </Form.Item>
 
         <Form.Item label="描述">
-          {getFieldDecorator('remark')(<Input placeholder="请输入角色描述"/>)}
+          {getFieldDecorator('remark')(<Input placeholder="请输入标签描述"/>)}
         </Form.Item>
 
       </Form>
@@ -83,4 +91,4 @@ class RoleForm extends React.Component<{
   }
 }
 
-export default RoleForm;
+export default TagsForm;

@@ -88,7 +88,7 @@ export default {
     },
 
     * deleteUser({ playload }, { call, put }) {
-      let deleted = yield call(deleteUser, playload);
+      let deleted = yield call(deleteUser, playload.id);
       let response;
       if (deleted != undefined) {
         notification.success({

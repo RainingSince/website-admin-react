@@ -68,7 +68,7 @@ export default {
     },
 
     * deletePermission({ playload }, { call, put }) {
-      let deleted = yield call(deletePermission, playload);
+      let deleted = yield call(deletePermission, playload.id);
       let response;
       if (deleted != undefined) {
         notification.success({

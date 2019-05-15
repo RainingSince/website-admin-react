@@ -49,7 +49,9 @@ export default {
   externals: {
     '@antv/data-set': 'DataSet',
   },
+
   ignoreMomentLocale: true,
+
   lessLoaderOptions: {
     javascriptEnabled: true,
   },

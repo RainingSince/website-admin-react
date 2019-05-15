@@ -1,20 +1,20 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from 'dva';
 import { Button, Row, Transfer } from 'antd';
 import { TransferItem } from 'antd/lib/transfer';
 
-
-interface Permission extends TransferItem {
+interface Tag extends TransferItem {
   id: string
 }
 
-@connect(({ roles, permissions }) => ({
-  roleDetail: roles.detail,
-  permissionList: roles.detail.permissionList,
-  permissions: permissions.permissions,
+
+@connect(({ article, tags }) => ({
+  articleDetail: article.detail,
+  tagList: article.detail.tagList,
+  tags: tags.tags,
 }))
-class SelectPermission extends PureComponent<{
-  permissionList, permissions, roleDetail, dispatch, dataSource, submitClick, cancelClick,
+class TagsSelect extends React.PureComponent<{
+  tagList, tags, articleDetail, dispatch, dataSource, submitClick, cancelClick,
 }, { selectedKeys, targetKeys }> {
 
   constructor(props) {
@@ -26,26 +26,26 @@ class SelectPermission extends PureComponent<{
   }
 
   static defaultProps = {
-    permissionList: [],
-    permissions: [],
+    tagList: [],
+    tags: [],
     dispatch: null,
-    roleDetail: {},
+    articleDetail: {},
   };
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'roles/roleDetail',
+      type: 'article/articleDetail',
       playload: this.props.dataSource,
     });
     this.props.dispatch({
-      type: 'permissions/loadAllPermission',
+      type: 'tags/loadAllTags',
     });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      selectedKeys: nextProps.permissionList,
-      targetKeys: nextProps.permissionList,
+      selectedKeys: nextProps.tagList,
+      targetKeys: nextProps.tagList,
     });
   }
 
@@ -61,20 +61,19 @@ class SelectPermission extends PureComponent<{
 
 
   renderItem = (item) => {
-    return <span> {item.name} - {item.code} </span>;
+    return <span> {item.name}</span>;
   };
 
   render() {
-
-    const { permissions } = this.props;
+    const { tags } = this.props;
     const { selectedKeys, targetKeys } = this.state;
 
 
     return <Row type="flex" justify="center">
-      // @ts-ignore
+
       <Transfer
-        rowKey={(record: Permission) => record.id}
-        dataSource={permissions}
+        rowKey={(record: Tag) => record.id}
+        dataSource={tags ? tags : []}
         targetKeys={targetKeys}
         selectedKeys={selectedKeys}
         onChange={this.handlerChange}
@@ -85,7 +84,7 @@ class SelectPermission extends PureComponent<{
           height: '80vh',
           minHeight: '80vh',
         }}
-        titles={['未选择权限', '已选择权限']}
+        titles={['未选择标签', '已选择标签']}
       >
 
       </Transfer>
@@ -107,7 +106,7 @@ class SelectPermission extends PureComponent<{
           取消
         </Button>
         <Button onClick={e => {
-          this.props.submitClick(this.props.roleDetail.id, this.state.targetKeys);
+          this.props.submitClick(this.props.articleDetail.id, this.state.targetKeys);
         }}
                 type="primary">
           保存
@@ -115,7 +114,6 @@ class SelectPermission extends PureComponent<{
       </div>
     </Row>;
   }
-
 }
 
-export default SelectPermission;
+export default TagsSelect;

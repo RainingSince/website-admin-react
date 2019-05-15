@@ -2,28 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Icon, Row } from 'antd';
 import { TableFilterType } from '@/components/TableFilter';
-import FormDrawer from '@/components/FormDrawer';
-import UserForm from '@/pages/System/User/components/UserForm';
 import TableFilterPage from '@/components/TableFilterPage';
-import SelectRole from '@/pages/System/User/components/SelectRole';
-import Authorized from '@/utils/Authorized';
+import FormDrawer from '@/components/FormDrawer';
+import ArticleForm from '@/pages/Article/ArticleDetail/component/ArticleForm';
+import TagsSelect from '@/pages/Article/ArticleDetail/component/TagsSelect';
+import { withRouter } from 'umi';
 
-@Authorized.Secured(['users:list'])
-@connect(({ users, loading }) => ({
-  users: users.users,
-  submitting: loading.effects['users/loadUser'],
+@connect(({ article, loading, catalog }) => ({
+  articles: article.articles,
+  catalogs: catalog.catalogs,
+  submitting: loading.effects['article/loadArticle'],
 }))
-class UserPage extends Component<{ users, dispatch },
+class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
   { drawerTitle, selectedItem, drawerShow, pageSize, current, selectShow }> {
-
 
   constructor(props) {
     super(props);
     this.state = {
       drawerTitle: '',
       drawerShow: false,
-      selectShow: false,
       selectedItem: {},
+      selectShow: false,
       pageSize: 10,
       current: 1,
     };
@@ -31,13 +30,14 @@ class UserPage extends Component<{ users, dispatch },
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'users/loadUser',
+      type: 'article/loadArticle',
     });
+
   }
 
   filterCallBack = (values) => {
     this.props.dispatch({
-      type: 'users/searchUser',
+      type: 'article/searchArticle',
       playload: {
         ...values,
       },
@@ -46,9 +46,50 @@ class UserPage extends Component<{ users, dispatch },
 
   addPermission = () => {
     this.setState({
-      drawerTitle: '新增用户',
+      drawerTitle: '创建文章',
       drawerShow: true,
       selectedItem: {},
+    });
+  };
+
+  itemUpdate = (item) => {
+    this.setState({
+      drawerTitle: '修改文章',
+      drawerShow: true,
+      selectedItem: item,
+    });
+  };
+
+  selectPermission = (item) => {
+    this.setState({
+      drawerTitle: '选择标签',
+      selectShow: true,
+      selectedItem: item,
+    });
+  };
+
+  itemDelete = (item) => {
+    item = Object.assign(item, {
+      current: this.state.current,
+      step: this.state.pageSize,
+    });
+    this.props.dispatch({
+      type: 'article/deleteArticle',
+      playload: item,
+    });
+  };
+
+  itemsDelete = (dataSource) => {
+    let data = Object.assign(dataSource, {
+      current: this.state.current,
+      step: this.state.pageSize,
+      dataSource: dataSource,
+    });
+
+
+    this.props.dispatch({
+      type: 'article/deleteArticle',
+      playload: data,
     });
   };
 
@@ -62,35 +103,19 @@ class UserPage extends Component<{ users, dispatch },
     }
   };
 
-  itemUpdate = (item) => {
+  permissionSelectCallBack = (id, selectIds) => {
     this.setState({
-      drawerTitle: '修改用户',
-      drawerShow: true,
-      selectedItem: item,
-    });
-  };
-
-  itemDelete = (item) => {
-    item = Object.assign(item, {
-      current: this.state.current,
-      step: this.state.pageSize,
+      selectShow: false,
+      selectedItem: {},
     });
     this.props.dispatch({
-      type: 'users/deleteUser',
-      playload: item,
-    });
-  };
-
-  itemsDelete = (dataSource) => {
-    let data = Object.assign(dataSource, {
-      current: this.state.current,
-      step: this.state.pageSize,
-      dataSource: dataSource,
-    });
-
-    this.props.dispatch({
-      type: 'users/deleteUser',
-      playload: data,
+      type: 'article/selectTags',
+      playload: {
+        id: id,
+        selectIds: selectIds,
+        current: this.state.current,
+        step: this.state.pageSize,
+      },
     });
   };
 
@@ -120,42 +145,27 @@ class UserPage extends Component<{ users, dispatch },
 
     if (type === 'add') {
       this.props.dispatch({
-        type: 'users/createUser',
+        type: 'article/createArticle',
         playload: value,
       });
     } else {
       this.props.dispatch({
-        type: 'users/updateUser',
+        type: 'article/updateArticle',
         playload: value,
       });
     }
 
   };
-
-
-  permissionSelectCallBack = (id, selectIds) => {
-    this.setState({
-      selectShow: false,
-      selectedItem: {},
-    });
-    this.props.dispatch({
-      type: 'users/selectRole',
-      playload: {
-        id: id,
-        selectIds: selectIds,
-        current: this.state.current,
-        step: this.state.pageSize,
-      },
-    });
+  itemDetail = (item) => {
+    this.props.history.push({ pathname: '/article/edit', query: { id: item.id } });
   };
-
 
   pageChange = (value) => {
     this.setState({
       current: value,
     });
     this.props.dispatch({
-      type: 'users/loadUser',
+      type: 'article/loadArticle',
       playload: {
         step: this.state.pageSize,
         current: value,
@@ -163,22 +173,13 @@ class UserPage extends Component<{ users, dispatch },
     });
   };
 
-  selectRole = (item) => {
-    this.setState({
-      drawerTitle: '选择角色',
-      selectShow: true,
-      selectedItem: item,
-    });
-  };
-
   pageTotalChange = (value, data) => {
     this.setState({
-      pageSize: data,
       current: value,
+      pageSize: data,
     });
-
     this.props.dispatch({
-      type: 'users/loadUser',
+      type: 'article/loadArticle',
       playload: {
         step: data,
         current: value,
@@ -187,18 +188,15 @@ class UserPage extends Component<{ users, dispatch },
   };
 
   render() {
+
     const columns = [
       {
-        title: '用户名称',
+        title: '文章名称',
         dataIndex: 'name',
       },
       {
-        title: '用户账号',
-        dataIndex: 'account',
-      },
-      {
-        title: '手机号',
-        dataIndex: 'phone',
+        title: '文章描述',
+        dataIndex: 'remark',
       },
       {
         title: '创建时间',
@@ -215,57 +213,57 @@ class UserPage extends Component<{ users, dispatch },
         dataIndex: '',
         render: (item) => {
           return <Row type="flex">
-            <Authorized authority={['users:modify']}>
-              <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
-                    onClick={e => this.itemUpdate(item)}/>
-            </Authorized>
-            <Authorized authority={(item) =>
-              item.indexOf('users:roles:choose') > -1
-              && item.indexOf('users:info') > -1}>
-              <Icon type="setting" theme="twoTone" twoToneColor="#1890FF" style={{ marginLeft: '10px' }}
-                    onClick={e => this.selectRole(item)}
-              /></Authorized>
-            <Authorized authority={['users:delete']}>
-              <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
-                    onClick={e => this.itemDelete(item)}/>
-            </Authorized>
+            <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
+                  onClick={e => this.itemUpdate(item)}/>
+            <Icon type="setting" theme="twoTone" twoToneColor="#1890FF" style={{ marginLeft: '10px' }}
+                  onClick={e => this.selectPermission(item)}
+            />
+            <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
+                  onClick={e => this.itemDelete(item)}/>
+            <div style={{ marginLeft: '10px' }} onClick={e => this.itemDetail(item)}>
+              详情
+            </div>
           </Row>;
         },
       },
     ];
 
-    const { users } = this.props;
+    const { articles } = this.props;
 
     const filters = [
       { type: TableFilterType.INPUT, label: '名称', dataIndex: 'name' },
-      { type: TableFilterType.INPUT, label: '账号', dataIndex: 'account' },
     ];
     const tableOption = {
       columns: columns,
       data: {
-        list: users.records,
+        list: articles.records,
         pagination:
           {
-            total: users.total,
+            total: articles.total,
             onChange: this.pageChange,
             onShowSizeChange: this.pageTotalChange,
           },
       },
     };
 
-    return <TableFilterPage pageTitle="用户管理"
+
+    return <TableFilterPage pageTitle="文章管理"
                             filters={filters}
                             filterCallBack={this.filterCallBack}
                             optionCallBack={this.optionCallBack}
-                            optionAuth={{ addAuth: ['users:add'], deleteAuth: ['users:delete'] }}
                             tableOption={tableOption}>
+
+
       <FormDrawer title={this.state.drawerTitle}
                   closeClick={this.formCancel}
                   visible={this.state.drawerShow}>
-        <UserForm submitClick={this.formSubmit}
-                  cancelClick={this.formCancel}
-                  dataSource={this.state.selectedItem}
+
+        <ArticleForm submitClick={this.formSubmit}
+                     cancelClick={this.formCancel}
+                     dataSource={this.state.selectedItem}
+
         />
+
       </FormDrawer>
 
 
@@ -274,15 +272,17 @@ class UserPage extends Component<{ users, dispatch },
                   visible={this.state.selectShow}
                   width={'50%'}
       >
-        <SelectRole submitClick={this.permissionSelectCallBack}
-                    cancelClick={this.formCancel}
-                    dataSource={this.state.selectedItem.id}/>
+
+        <TagsSelect
+          submitClick={this.permissionSelectCallBack}
+          cancelClick={this.formCancel}
+          dataSource={this.state.selectedItem.id}/>
 
       </FormDrawer>
 
     </TableFilterPage>;
   }
+
 }
 
-
-export default UserPage;
+export default withRouter(ArticlePage);

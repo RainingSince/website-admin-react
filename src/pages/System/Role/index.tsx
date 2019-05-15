@@ -75,7 +75,7 @@ class RolePage extends Component<{ roles, dispatch },
     });
     this.props.dispatch({
       type: 'roles/deleteRole',
-      playload: item.id,
+      playload: item,
     });
   };
 

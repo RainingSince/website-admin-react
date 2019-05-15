@@ -32,7 +32,7 @@ class LoginPage extends Component<{ dispatch, login, submitting, form }, {}> {
     return <div>
 
       <Row type="flex" justify="center" align="middle" style={{ height: '100px', fontSize: '36px' }}>
-        Mall Admin
+        Website Admin
       </Row>
 
       <Row type="flex" justify="center" align="middle">
