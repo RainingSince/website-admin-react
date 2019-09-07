@@ -71,7 +71,6 @@ class SelectPermission extends PureComponent<{
 
 
     return <Row type="flex" justify="center">
-      // @ts-ignore
       <Transfer
         rowKey={(record: Permission) => record.id}
         dataSource={permissions}
@@ -86,9 +85,7 @@ class SelectPermission extends PureComponent<{
           minHeight: '80vh',
         }}
         titles={['未选择权限', '已选择权限']}
-      >
-
-      </Transfer>
+      />
 
 
       <div

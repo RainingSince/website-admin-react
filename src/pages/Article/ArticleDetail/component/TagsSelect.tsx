@@ -85,9 +85,7 @@ class TagsSelect extends React.PureComponent<{
           minHeight: '80vh',
         }}
         titles={['未选择标签', '已选择标签']}
-      >
-
-      </Transfer>
+      />
 
 
       <div

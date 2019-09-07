@@ -212,7 +212,7 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
         title: '操作',
         dataIndex: '',
         render: (item) => {
-          return <Row type="flex">
+          return <Row type="flex" align="middle">
             <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
                   onClick={e => this.itemUpdate(item)}/>
             <Icon type="setting" theme="twoTone" twoToneColor="#1890FF" style={{ marginLeft: '10px' }}
@@ -220,7 +220,7 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
             />
             <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
                   onClick={e => this.itemDelete(item)}/>
-            <div style={{ marginLeft: '10px' }} onClick={e => this.itemDetail(item)}>
+            <div style={{ marginLeft: '10px', color: '#1890FF' }} onClick={e => this.itemDetail(item)}>
               详情
             </div>
           </Row>;
