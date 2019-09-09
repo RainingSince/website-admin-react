@@ -101,8 +101,8 @@ export default {
 
       let url;
 
-      if (playload.imageCover && playload.imageCover.imageUpload) {
-        url = yield call(uploadFile, playload.imageCover.imageData);
+      if (playload.imageCover && playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
+        url = yield call(uploadFile, playload.imageCover.imageData.imageData);
       }
 
       if (url)
@@ -127,8 +127,8 @@ export default {
     * updateArticle({ playload }, { call, put }) {
       let url;
 
-      if (playload.imageCover && playload.imageCover.imageUpload) {
-        url = yield call(uploadFile, playload.imageCover.imageData);
+      if (playload.imageCover && playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
+        url = yield call(uploadFile, playload.imageCover.imageData.imageData);
       }
 
       if (url)

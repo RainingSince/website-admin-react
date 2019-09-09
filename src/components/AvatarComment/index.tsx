@@ -53,10 +53,9 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       this.getBase64(info.file.originFileObj, imageData => {
         this.setState({
           loading: false,
-          imageData: imageData,
         });
         if (onChange) {
-          onChange({ imageData: this.state.imageFile, imageUpload: true });
+          onChange({ imageData: { imageData: this.state.imageFile, imageUpload: true, baseData: imageData } });
         }
       });
     }
@@ -71,7 +70,6 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
         <div>上传</div>
       </div>
     );
-
     return <Upload
       name="avatar"
       listType="picture-card"
@@ -79,7 +77,8 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       beforeUpload={this.beforeUpload}
       onChange={this.handleChange}
     >
-      {imageData ? <img src={imageData} style={{ width: '100%' }}/>
+      {(imageData || imageData.baseData) ?
+        <img src={imageData.baseData ? imageData.baseData : imageData} style={{ width: '100%' }}/>
         : uploadButton}
     </Upload>;
   }
