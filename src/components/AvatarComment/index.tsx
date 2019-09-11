@@ -77,7 +77,7 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       beforeUpload={this.beforeUpload}
       onChange={this.handleChange}
     >
-      {(imageData || imageData.baseData) ?
+      {(imageData || (imageData && imageData.baseData)) ?
         <img src={imageData.baseData ? imageData.baseData : imageData} style={{ width: '100%' }}/>
         : uploadButton}
     </Upload>;
