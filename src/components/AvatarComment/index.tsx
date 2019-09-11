@@ -75,6 +75,7 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       listType="picture-card"
       showUploadList={false}
       beforeUpload={this.beforeUpload}
+      customRequest={null}
       onChange={this.handleChange}
     >
       {(imageData || (imageData && imageData.baseData)) ?
