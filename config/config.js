@@ -55,4 +55,8 @@ export default {
   lessLoaderOptions: {
     javascriptEnabled: true,
   },
+  exportStatic: {
+    htmlSuffix: true,
+  },
+
 };
