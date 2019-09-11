@@ -40,25 +40,17 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
   handleChange = info => {
 
     const { onChange } = this.props;
-
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
-    }
-
-    if (info.file.status === 'done') {
+    this.setState({
+      imageFile: info.file,
+    });
+    this.getBase64(info.file, imageData => {
       this.setState({
-        imageFile: info.file.originFileObj,
+        loading: false,
       });
-      this.getBase64(info.file.originFileObj, imageData => {
-        this.setState({
-          loading: false,
-        });
-        if (onChange) {
-          onChange({ imageData: { imageData: this.state.imageFile, imageUpload: true, baseData: imageData } });
-        }
-      });
-    }
+      if (onChange) {
+        onChange({ imageData: { imageData: this.state.imageFile, imageUpload: true, baseData: imageData } });
+      }
+    });
 
   };
 
@@ -75,8 +67,7 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       listType="picture-card"
       showUploadList={false}
       beforeUpload={this.beforeUpload}
-      customRequest={null}
-      onChange={this.handleChange}
+      customRequest={this.handleChange}
     >
       {(imageData || (imageData && imageData.baseData)) ?
         <img src={imageData.baseData ? imageData.baseData : imageData} style={{ width: '100%' }}/>
