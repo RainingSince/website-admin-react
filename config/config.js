@@ -36,6 +36,15 @@ export default {
     ie: 11,
   },
 
+  proxy: {
+    '/api': {
+      'target': process.env.APP_TYPE == 'dev' ?
+        'http://api.caodebo.com/website/' : 'http://localhost:8080/',
+      changeOrigin: true,
+      'pathRewrite': { '^/api': '' },
+    },
+  },
+
   routes: routers,
   disableRedirectHoist: true,
 
