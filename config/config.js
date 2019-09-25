@@ -38,7 +38,7 @@ export default {
 
   proxy: {
     '/api': {
-      'target': process.env.APP_TYPE == 'dev' ?
+      'target': process.env.BUILD_TYPE == 'dev' ?
         'http://api.caodebo.com/website/' : 'http://localhost:8080/',
       changeOrigin: true,
       'pathRewrite': { '^/api': '' },
