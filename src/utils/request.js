@@ -43,7 +43,9 @@ const errorHandler = error => {
 
 class request {
 
-  static BASE_URL = '/api/';
+  static BASE_URL = 'http://api.caodebo.com/website/';
+
+  // static BASE_URL = 'http://localhost:8080/';
 
   static get(path, params) {
     return this.fetchData(path, 'GET', params);
@@ -85,7 +87,6 @@ class request {
       });
   }
 
-
   static fetchData(path, type, params) {
     let token = getAuthority();
     let url = this.BASE_URL + path;
@@ -122,8 +123,7 @@ class request {
         } else return data;
       })
       .catch(err => {
-        console.log('err: --->');
-        console.log(err);
+        errorHandler(err);
       });
   }
 

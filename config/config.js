@@ -36,17 +36,6 @@ export default {
     ie: 11,
   },
 
-  proxy: {
-    '/api/': {
-      'target': process.env.BUILD_TYPE == 'build' ?
-        'http://api.caodebo.com/' : 'http://localhost:8080/',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api/': process.env.BUILD_TYPE == 'build' ?
-          '/website/' : '/',
-      },
-    },
-  },
 
   routes: routers,
   disableRedirectHoist: true,
