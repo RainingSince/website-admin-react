@@ -39,9 +39,12 @@ export default {
   proxy: {
     '/api/': {
       'target': process.env.BUILD_TYPE == 'build' ?
-        'http://api.caodebo.com/website/' : 'http://localhost:8080/',
+        'http://api.caodebo.com/' : 'http://localhost:8080/',
       changeOrigin: true,
-      pathRewrite: { '^/api/': '/' },
+      pathRewrite: {
+        '^/api/': process.env.BUILD_TYPE == 'build' ?
+          '/website/' : '/',
+      },
     },
   },
 
