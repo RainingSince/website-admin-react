@@ -1,7 +1,11 @@
 import React from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
+import { connect } from 'dva';
 
 const defaultDetail = { name: '', remark: '', sort: '' };
+
+const { Option } = Select;
+
 
 // @ts-ignore
 @Form.create({
@@ -11,6 +15,11 @@ const defaultDetail = { name: '', remark: '', sort: '' };
         name: 'name',
         // @ts-ignore
         value: props.dataSource.name,
+      }),
+      catalogId: Form.createFormField({
+        name: 'catalogId',
+        // @ts-ignore
+        valus: props.dataSource.catalogId,
       }),
       remark: Form.createFormField({
         name: 'remark',
@@ -25,14 +34,26 @@ const defaultDetail = { name: '', remark: '', sort: '' };
     };
   },
 })
+@connect(({ loading, catalog }) => ({
+  catalogs: catalog.catalogs,
+  submitting: loading.effects['catalog/loadAllCatalog'],
+}))
 class TagsForm extends React.Component<{
-  submitClick, cancelClick, dataSource, form
+  submitClick, cancelClick, dataSource, form, catalogs, dispatch
 }, {}> {
   static defaultProps = {
     form: undefined,
     dispatch: undefined,
+    catalogs: [],
     dataSource: defaultDetail,
   };
+
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'catalog/loadAllCatalogs',
+    });
+  }
+
 
   onSubmit = () => {
     this.props.form.validateFieldsAndScroll();
@@ -41,6 +62,22 @@ class TagsForm extends React.Component<{
     if (!err.name)
       this.props.submitClick(this.props.dataSource.id ?
         'update' : 'add', Object.assign(this.props.dataSource, this.props.form.getFieldsValue()));
+  };
+
+
+  renderCatalogSelect = () => {
+    if (this.props.catalogs.length > 0)
+      return <Select placeholder="请选择分类">
+        {this.props.catalogs.map((item, index) => {
+          return <Option value={item.id} key={index}>
+            {item.name}
+          </Option>;
+        })}
+      </Select>;
+
+    else return <div>
+      暂无可选择分类
+    </div>;
   };
 
 
@@ -57,6 +94,12 @@ class TagsForm extends React.Component<{
           })(<Input placeholder="请输入标签名称"/>)}
         </Form.Item>
 
+        <Form.Item label="分类">
+          {getFieldDecorator('catalogId', {
+            rules: [{ required: true, message: 'Please select catalog' }],
+            initialValue: this.props.dataSource.catalogId,
+          })(this.renderCatalogSelect())}
+        </Form.Item>
 
         <Form.Item label="排序">
           {getFieldDecorator('sort')(<Input placeholder="请输入标签排序"/>)}

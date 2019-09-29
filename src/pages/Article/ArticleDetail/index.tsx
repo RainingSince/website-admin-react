@@ -276,6 +276,7 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
         <TagsSelect
           submitClick={this.permissionSelectCallBack}
           cancelClick={this.formCancel}
+          catalogId={this.state.selectedItem.catalogId}
           dataSource={this.state.selectedItem.id}/>
 
       </FormDrawer>

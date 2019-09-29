@@ -14,7 +14,7 @@ interface Tag extends TransferItem {
   tags: tags.tags,
 }))
 class TagsSelect extends React.PureComponent<{
-  tagList, tags, articleDetail, dispatch, dataSource, submitClick, cancelClick,
+  tagList, tags, articleDetail, dispatch, catalogId, dataSource, submitClick, cancelClick,
 }, { selectedKeys, targetKeys }> {
 
   constructor(props) {
@@ -39,6 +39,7 @@ class TagsSelect extends React.PureComponent<{
     });
     this.props.dispatch({
       type: 'tags/loadAllTags',
+      playload: this.props.catalogId,
     });
   }
 
@@ -68,12 +69,11 @@ class TagsSelect extends React.PureComponent<{
     const { tags } = this.props;
     const { selectedKeys, targetKeys } = this.state;
 
-
     return <Row type="flex" justify="center">
 
       <Transfer
         rowKey={(record: Tag) => record.id}
-        dataSource={tags ? tags : []}
+        dataSource={Array.isArray(tags) ? tags : []}
         targetKeys={targetKeys}
         selectedKeys={selectedKeys}
         onChange={this.handlerChange}

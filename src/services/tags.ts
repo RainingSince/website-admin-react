@@ -5,7 +5,7 @@ export async function loadTags(values) {
 }
 
 export async function loadAllTags(values) {
-  return request.get("tags/list",values)
+  return request.get('tags/list/' + values);
 }
 
 export async function searchTags(values) {

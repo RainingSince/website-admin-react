@@ -44,7 +44,6 @@ const errorHandler = error => {
 class request {
 
   static BASE_URL = 'http://api.caodebo.com/website/';
-
   // static BASE_URL = 'http://localhost:8080/';
 
   static get(path, params) {
@@ -114,6 +113,7 @@ class request {
         'Content-Type': 'application/json;charset=utf-8',
         'Authorization': token,
       },
+      mode: 'cors',
       method: type,
       body: type === 'GET' ? undefined : JSON.stringify(params),
     }).then(data => data.json())

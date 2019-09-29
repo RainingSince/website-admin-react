@@ -103,7 +103,7 @@ class ArticleForm extends React.Component<{
           })(<AvatarComment/>)}
         </Form.Item>
 
-        <Form.Item label="名称">
+        <Form.Item label="分类">
           {getFieldDecorator('catalogId', {
             rules: [{ required: true, message: 'Please select catalog' }],
             initialValue: this.props.dataSource.catalogId,

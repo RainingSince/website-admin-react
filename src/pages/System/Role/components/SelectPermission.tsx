@@ -73,7 +73,7 @@ class SelectPermission extends PureComponent<{
     return <Row type="flex" justify="center">
       <Transfer
         rowKey={(record: Permission) => record.id}
-        dataSource={permissions}
+        dataSource={Array.isArray(permissions) ? permissions : []}
         targetKeys={targetKeys}
         selectedKeys={selectedKeys}
         onChange={this.handlerChange}

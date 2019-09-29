@@ -70,10 +70,9 @@ class SelectRole extends PureComponent<{
 
 
     return <Row type="flex" justify="center">
-      // @ts-ignore
       <Transfer
         rowKey={(record: Role) => record.id}
-        dataSource={roles}
+        dataSource={Array.isArray(roles) ? roles : []}
         targetKeys={targetKeys}
         selectedKeys={selectedKeys}
         onChange={this.handlerChange}
@@ -85,9 +84,7 @@ class SelectRole extends PureComponent<{
           minHeight: '80vh',
         }}
         titles={['未选择角色', '已选择角色']}
-      >
-
-      </Transfer>
+      />
 
 
       <div
