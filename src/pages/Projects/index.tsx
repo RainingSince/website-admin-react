@@ -5,7 +5,7 @@ class ProjectPage extends React.Component {
 
   render() {
     return <div>
-      123
+       Project Page
     </div>;
   }
 
