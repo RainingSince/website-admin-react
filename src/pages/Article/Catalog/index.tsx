@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Icon, Row } from 'antd';
+import { Icon, Popconfirm, Row, Tooltip } from 'antd';
 import { TableFilterType } from '@/components/TableFilter';
 import CustomPage from '@/components/CustomPage';
 import CatalogForm from '@/pages/Article/Catalog/comments/CatalogForm';
@@ -165,11 +165,22 @@ class CatalogPage extends React.Component<{ catalogs, dispatch, submitting },
         dataIndex: '',
         render: (item) => {
           return <Row type="flex">
-            <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
-                  onClick={e => this.itemUpdate(item)}/>
-
-            <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
-                  onClick={e => this.itemDelete(item)}/>
+            <Tooltip title="编辑分类">
+              <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
+                    onClick={e => this.itemUpdate(item)}/>
+            </Tooltip>
+            <Tooltip title="删除分类">
+              <Popconfirm
+                title="确定删除分类吗?"
+                onConfirm={e => this.itemDelete(item)}
+                okText="删除"
+                cancelText="取消"
+              >
+                <Icon type="delete" theme="twoTone" twoToneColor="#FF0000"
+                      style={{ marginLeft: '10px' }}
+                />
+              </Popconfirm>
+            </Tooltip>
           </Row>;
         },
       },

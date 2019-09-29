@@ -6,7 +6,7 @@ import MdEditor from 'for-editor';
 @connect(({ article }) => ({
   articleDetail: article.detail,
 }))
-class ArticleEdit extends React.Component<{ articleDetail, dispatch, history }, { markdown }> {
+class ArticleEdit extends React.PureComponent<{ articleDetail, dispatch, history }, { markdown }> {
 
   constructor(props) {
     super(props);
@@ -41,6 +41,7 @@ class ArticleEdit extends React.Component<{ articleDetail, dispatch, history }, 
   };
 
   render() {
+    const { articleDetail } = this.props;
     return <div style={{ margin: '0 30px', display: 'flex', flexDirection: 'column' }}>
 
       <div
@@ -50,7 +51,7 @@ class ArticleEdit extends React.Component<{ articleDetail, dispatch, history }, 
 
       <MdEditor
         height='85vh'
-        value={this.state.markdown}
+        value={articleDetail.content}
         onChange={this.updateMarkDown}
         onSave={this.saveMarkDown}
       />

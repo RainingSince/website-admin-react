@@ -3,7 +3,7 @@ import {
   deleteArticle,
   deleteArticles,
   loadArticle, loadArticleDetail,
-  searchArticle, selectTags, updateArticle, uploadFile,
+  searchArticle, selectTags, updateArticle,
 } from '@/services/article';
 import { notification } from 'antd';
 
@@ -99,15 +99,6 @@ export default {
     },
     * createArticle({ playload }, { call, put }) {
 
-      let url;
-
-      if (playload.imageCover && playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
-        url = yield call(uploadFile, playload.imageCover.imageData.imageData);
-      }
-
-      if (url)
-        playload = Object.assign(playload, { imageCover: url.url });
-
       let cteated = yield call(createArticle, playload);
       let response;
       if (cteated) {
@@ -125,14 +116,6 @@ export default {
       }
     },
     * updateArticle({ playload }, { call, put }) {
-      let url;
-
-      if (playload.imageCover && playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
-        url = yield call(uploadFile, playload.imageCover.imageData.imageData);
-      }
-
-      if (url)
-        playload = Object.assign(playload, { imageCover: url.url });
 
       let update = yield call(updateArticle, playload);
       let response;

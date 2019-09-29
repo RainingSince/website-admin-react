@@ -27,26 +27,28 @@ export default [
         component: './Home',
       },
       {
+        path: '/project',
+        name: '项目管理',
+        icon: 'project',
+        component: './Projects',
+      },
+      {
+        path: '/catalog',
+        name: '分类管理',
+        icon: 'appstore',
+        component: './Article/Catalog',
+      },
+      {
+        path: '/tags',
+        name: '标签管理',
+        icon: 'tags',
+        component: './Article/Tags',
+      },
+      {
         path: '/article',
-        name: '文章管理',
         icon: 'snippets',
-        routes: [
-          {
-            path: '/article/catalog',
-            name: '分类管理',
-            component: './Article/Catalog',
-          },
-          {
-            path: '/article/tags',
-            name: '标签管理',
-            component: './Article/Tags',
-          },
-          {
-            path: '/article/detail',
-            name: '详情管理',
-            component: './Article/ArticleDetail',
-          },
-        ],
+        name: '文章管理',
+        component: './Article/ArticleDetail',
       },
       {
         path: '/system',

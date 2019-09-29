@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Icon, Row } from 'antd';
+import { Icon, Popconfirm, Row, Tooltip } from 'antd';
 import { TableFilterType } from '@/components/TableFilter';
 import TableFilterPage from '@/components/TableFilterPage';
 import FormDrawer from '@/components/FormDrawer';
 import ArticleForm from '@/pages/Article/ArticleDetail/component/ArticleForm';
-import TagsSelect from '@/pages/Article/ArticleDetail/component/TagsSelect';
 import { withRouter } from 'umi';
 
 @connect(({ article, loading, catalog }) => ({
@@ -60,13 +59,6 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
     });
   };
 
-  selectPermission = (item) => {
-    this.setState({
-      drawerTitle: '选择标签',
-      selectShow: true,
-      selectedItem: item,
-    });
-  };
 
   itemDelete = (item) => {
     item = Object.assign(item, {
@@ -101,22 +93,6 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
       list = list.map(item => item.id);
       this.itemsDelete(list);
     }
-  };
-
-  permissionSelectCallBack = (id, selectIds) => {
-    this.setState({
-      selectShow: false,
-      selectedItem: {},
-    });
-    this.props.dispatch({
-      type: 'article/selectTags',
-      playload: {
-        id: id,
-        selectIds: selectIds,
-        current: this.state.current,
-        step: this.state.pageSize,
-      },
-    });
   };
 
   formCancel = () => {
@@ -156,6 +132,7 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
     }
 
   };
+
   itemDetail = (item) => {
     this.props.history.push({ pathname: '/article/edit', query: { id: item.id } });
   };
@@ -213,16 +190,30 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
         dataIndex: '',
         render: (item) => {
           return <Row type="flex" align="middle">
-            <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
-                  onClick={e => this.itemUpdate(item)}/>
-            <Icon type="setting" theme="twoTone" twoToneColor="#1890FF" style={{ marginLeft: '10px' }}
-                  onClick={e => this.selectPermission(item)}
-            />
-            <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
-                  onClick={e => this.itemDelete(item)}/>
-            <div style={{ marginLeft: '10px', color: '#1890FF' }} onClick={e => this.itemDetail(item)}>
-              详情
-            </div>
+
+            <Tooltip title="编辑文章">
+              <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
+                    onClick={e => this.itemDetail(item)}/>
+            </Tooltip>
+
+            <Tooltip title="修改信息">
+              <Icon type="setting" theme="twoTone" twoToneColor="#1890FF" style={{ marginLeft: '10px' }}
+                    onClick={e => this.itemUpdate(item)}
+              />
+            </Tooltip>
+
+
+            <Tooltip title="删除文章">
+              <Popconfirm
+                title="确定删除文章吗?"
+                onConfirm={e => this.itemDelete(item)}
+                okText="删除"
+                cancelText="取消"
+              >
+                <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}/>
+              </Popconfirm>
+            </Tooltip>
+
           </Row>;
         },
       },
@@ -266,20 +257,6 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
 
       </FormDrawer>
 
-
-      <FormDrawer title={this.state.drawerTitle}
-                  closeClick={this.formCancel}
-                  visible={this.state.selectShow}
-                  width={'50%'}
-      >
-
-        <TagsSelect
-          submitClick={this.permissionSelectCallBack}
-          cancelClick={this.formCancel}
-          catalogId={this.state.selectedItem.catalogId}
-          dataSource={this.state.selectedItem.id}/>
-
-      </FormDrawer>
 
     </TableFilterPage>;
   }

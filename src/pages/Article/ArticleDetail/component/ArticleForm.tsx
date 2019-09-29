@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { connect } from 'dva';
-import AvatarComment from '@/components/AvatarComment';
 
 const { Option } = Select;
 
@@ -20,10 +19,10 @@ const { Option } = Select;
         // @ts-ignore
         value: props.dataSource.remark,
       }),
-      imageCover: Form.createFormField({
-        name: 'imageCover',
+      tagList: Form.createFormField({
+        name: 'tagList',
         // @ts-ignore
-        valus: props.dataSource.imageCover,
+        valus: props.dataSource.tagList,
       }),
       catalogName: Form.createFormField({
         name: 'catalogName',
@@ -38,18 +37,20 @@ const { Option } = Select;
     };
   },
 })
-@connect(({ loading, catalog }) => ({
+@connect(({ loading, catalog, tags }) => ({
   catalogs: catalog.catalogs,
+  tags: tags.tags,
   submitting: loading.effects['catalog/loadAllCatalog'],
 }))
 class ArticleForm extends React.Component<{
-  submitClick, catalogs, cancelClick, dataSource, form, dispatch
-}, {}> {
+  submitClick, catalogs, cancelClick, tags, dataSource, form, dispatch
+}, { defaultTags }> {
 
   static defaultProps = {
     form: undefined,
     catalogs: [],
     dispatch: undefined,
+    tags: [],
     dataSource: { name: '', remark: '', imageCover: '', catalogName: '', catalogId: '' },
   };
 
@@ -61,9 +62,19 @@ class ArticleForm extends React.Component<{
         'update' : 'add', Object.assign(this.props.dataSource, this.props.form.getFieldsValue()));
   };
 
+  catalogChange = (id) => {
+    if (this.props.dataSource.catalogId != id) {
+      this.props.dataSource.tagList = [];
+    }
+    this.loadTags(id);
+  };
+
+
   renderCatalogSelect = () => {
     if (this.props.catalogs.length > 0)
-      return <Select placeholder="请选择分类">
+      return <Select placeholder="请选择分类"
+                     onChange={e => this.catalogChange(e)}
+      >
         {this.props.catalogs.map((item, index) => {
           return <Option value={item.id} key={index}>
             {item.name}
@@ -76,11 +87,42 @@ class ArticleForm extends React.Component<{
     </div>;
   };
 
+
+  renderTagsList = () => {
+    if (this.props.tags.length > 0)
+      return <Select placeholder="请选择标签"
+                     mode="multiple"
+      >
+
+        {this.props.tags.map((item, index) => {
+          return <Option value={item.id} key={index}>
+            {item.name}
+          </Option>;
+        })}
+      </Select>;
+
+    else return <div>
+      请先选择分类
+    </div>;
+  };
+
+
   componentDidMount() {
     this.props.dispatch({
       type: 'catalog/loadAllCatalogs',
     });
+
+    if (this.props.dataSource && this.props.dataSource.catalogId) {
+      this.loadTags(this.props.dataSource.catalogId);
+    }
   }
+
+  loadTags = (id) => {
+    this.props.dispatch({
+      type: 'tags/loadAllTags',
+      playload: id,
+    });
+  };
 
 
   render() {
@@ -97,18 +139,20 @@ class ArticleForm extends React.Component<{
           })(<Input placeholder="请输入文章名称"/>)}
         </Form.Item>
 
-        <Form.Item label="封面">
-          {getFieldDecorator('imageCover', {
-            initialValue: this.props.dataSource.imageCover,
-          })(<AvatarComment/>)}
-        </Form.Item>
-
         <Form.Item label="分类">
           {getFieldDecorator('catalogId', {
             rules: [{ required: true, message: 'Please select catalog' }],
             initialValue: this.props.dataSource.catalogId,
           })(this.renderCatalogSelect())}
         </Form.Item>
+
+
+        <Form.Item label="标签">
+          {getFieldDecorator('tagList', {
+            initialValue: this.props.dataSource.tagList,
+          })(this.renderTagsList())}
+        </Form.Item>
+
 
         <Form.Item label="描述">
           {getFieldDecorator('remark')(<Input placeholder="请输入文章描述"/>)}

@@ -6,10 +6,12 @@ export default {
     [
       'umi-plugin-react',
       {
+        chunks: ['vendors', 'umi'],
         antd: true,
         dva: {
           hmr: true,
         },
+        pwa: true,
         targets: {
           ie: 11,
         },
@@ -36,7 +38,28 @@ export default {
     ie: 11,
   },
 
-
+  chainWebpack: function (config, { webpack }) {
+    config.merge({
+      optimization: {
+        minimize: true,
+        splitChunks: {
+          chunks: 'all',
+          minSize: 30000,
+          minChunks: 3,
+          automaticNameDelimiter: '.',
+          cacheGroups: {
+            vendor: {
+              name: 'vendors',
+              test({ resource }) {
+                return /[\\/]node_modules[\\/]/.test(resource);
+              },
+              priority: 10,
+            },
+          },
+        },
+      }
+    });
+  },
   routes: routers,
   disableRedirectHoist: true,
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon, Row } from 'antd';
+import { Button, Icon, Popconfirm, Row } from 'antd';
 import Authorized from '@/utils/Authorized';
 
 interface OptionsPageProps {
@@ -36,21 +36,28 @@ class OptionsPage extends Component<OptionsPageProps, {}> {
     if (this.props.optionAuth.deleteAuth.length > 0)
       return <Authorized authority={this.props.optionAuth.deleteAuth}>
         {
-          this.props.deleteAllCallBack ? <Button type="danger"
-                                                 style={{ marginLeft: '20px' }}
-                                                 onClick={this.props.deleteAllCallBack}>
+          this.props.deleteAllCallBack ? <Popconfirm
+            title="确定删除选择项吗?"
+            onConfirm={this.props.deleteAllCallBack}
+            okText="删除"
+            cancelText="取消"
+          > <Button type="danger"
+                    style={{ marginLeft: '20px' }}>
             <Icon type="delete"/>
             删除选择
-          </Button> : ''
+          </Button> </Popconfirm> : ''
         }
       </Authorized>;
     else
-      return this.props.deleteAllCallBack ? <Button type="danger"
-                                                    style={{ marginLeft: '20px' }}
-                                                    onClick={this.props.deleteAllCallBack}>
+      return this.props.deleteAllCallBack ? <Popconfirm
+        title="确定删除选择项吗?"
+        onConfirm={this.props.deleteAllCallBack}
+        okText="删除"
+        cancelText="取消"
+      > <Button type="danger" style={{ marginLeft: '20px' }}>
         <Icon type="delete"/>
         删除选择
-      </Button> : '';
+      </Button></Popconfirm> : '';
   }
 
 

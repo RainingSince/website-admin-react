@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Icon, Row } from 'antd';
+import { Icon, Popconfirm, Row, Tooltip } from 'antd';
 import { TableFilterType } from '@/components/TableFilter';
 import CustomPage from '@/components/CustomPage';
 import TagsForm from '@/pages/Article/Tags/comments/TagsForm';
@@ -165,11 +165,21 @@ class TagsPage extends Component<{ tags, dispatch, submitting },
         dataIndex: '',
         render: (item) => {
           return <Row type="flex">
-            <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
-                  onClick={e => this.itemUpdate(item)}/>
-
-            <Icon type="delete" theme="twoTone" twoToneColor="#FF0000" style={{ marginLeft: '10px' }}
-                  onClick={e => this.itemDelete(item)}/>
+            <Tooltip title="编辑标签">
+              <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
+                    onClick={e => this.itemUpdate(item)}/>
+            </Tooltip>
+            <Tooltip title="删除标签">
+              <Popconfirm
+                title="确定删除标签吗?"
+                onConfirm={e => this.itemDelete(item)}
+                okText="删除"
+                cancelText="取消"
+              >
+                <Icon type="delete" theme="twoTone" twoToneColor="#FF0000"
+                      style={{ marginLeft: '10px' }}/>
+              </Popconfirm>
+            </Tooltip>
           </Row>;
         },
       },
@@ -192,8 +202,8 @@ class TagsPage extends Component<{ tags, dispatch, submitting },
       onOptionSubmit={this.optionCallBack}
     >
       <TagsForm submitClick={this.formSubmit}
-                   cancelClick={this.formCancel}
-                   dataSource={this.state.selectedItem}
+                cancelClick={this.formCancel}
+                dataSource={this.state.selectedItem}
       />
 
     </CustomPage>;
