@@ -71,7 +71,7 @@ class BasicLayout extends React.PureComponent {
       dispatch({
         type: 'setting/getSetting',
       });
-      
+
     }
   }
 
@@ -115,11 +115,11 @@ class BasicLayout extends React.PureComponent {
     const currRouterData = this.matchParamsPath(pathname, breadcrumbNameMap);
 
     if (!currRouterData) {
-      return 'Ant Design Pro';
+      return 'Raining Since';
     }
     const pageName = currRouterData.name;
 
-    return `${pageName} - Ant Design Pro`;
+    return `${pageName} - Raining Since`;
   };
 
   getLayoutStyle = () => {
