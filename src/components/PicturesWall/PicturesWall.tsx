@@ -53,12 +53,36 @@ class PicturesWall extends React.Component<{ value?: [], onChange?: any },
 
   handleChange = ({ fileList }) => {
     const { onChange } = this.props;
-    this.setState({
-      fileList: fileList,
-    });
     if (onChange) {
       onChange(this.state.fileList);
     }
+  };
+
+  fileMove = file => {
+    this.setState(state => {
+      const index = state.fileList.indexOf(file);
+      const newFileList = state.fileList.slice();
+      newFileList.splice(index, 1);
+      return {
+        fileList: newFileList,
+      };
+    });
+  };
+
+  customRequest = async file => {
+    let base = await this.getBase64(file.file);
+    let upload = {
+      ...file.file,
+      originFileObj: file.file,
+      status: 'done',
+      thumbUrl: base,
+      key: file.file.uid,
+    };
+    let files = this.state.fileList;
+    files.push(upload);
+    this.setState({
+      fileList: files,
+    });
   };
 
 
@@ -77,8 +101,10 @@ class PicturesWall extends React.Component<{ value?: [], onChange?: any },
         <Upload
           listType="picture-card"
           fileList={fileList}
+          onRemove={this.fileMove}
           beforeUpload={this.beforeUpload}
           onChange={this.handleChange}
+          customRequest={this.customRequest}
           onPreview={this.handlePreview}
         >
           {fileList.length >= 8 ? null : uploadButton}

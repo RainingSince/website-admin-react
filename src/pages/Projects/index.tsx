@@ -127,7 +127,7 @@ class ProjectPage extends React.Component<{ projects, dispatch, submitting },
 
     if (type === 'add') {
       this.props.dispatch({
-        type: 'projects/creteProject',
+        type: 'projects/createProject',
         playload: value,
       });
     } else {

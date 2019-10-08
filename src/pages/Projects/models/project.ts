@@ -8,10 +8,20 @@ import {
 import { notification } from 'antd';
 
 
-async function uploadImag(call, image) {
-  let url = await call(uploadFile, image);
+async function uploadImag(image) {
+  console.log(image);
+  let url = await uploadFile(image);
   return url.url;
 }
+
+async function uploadImages(images) {
+  return await images.map((item) => {
+    if (item && item.originFileObj)
+      return uploadImag(item.originFileObj);
+    else return item.url;
+  });
+}
+
 
 export default {
   namespace: 'projects',
@@ -89,30 +99,29 @@ export default {
 
     * createProject({ playload }, { call, put }) {
 
-
       let url;
       let imageList;
 
-      notification.open({
-        message: '图片上传中',
-        key: 'imageUpload',
-        duration: 0,
-      });
-
       if (playload.imageList && playload.imageList.length > 0) {
-
-        imageList = playload.imageList.map((item) => {
-          if (item && item.originFileObj)
-            return uploadImag(call, item.originFileObj);
-          else return item.url;
+        let list = playload.imageList;
+        notification.open({
+          message: '展示图片上传中',
+          key: 'imageUpload1',
+          duration: 0,
         });
-
+        imageList = yield call(uploadImages, list);
+        notification.close('imageUpload1');
       }
 
       if (playload.imageCover && playload.imageCover.imageUpload) {
+        notification.open({
+          message: '封面图片上传中',
+          key: 'imageUpload2',
+          duration: 0,
+        });
         url = yield call(uploadFile, playload.imageCover.imageData);
+        notification.close('imageUpload2');
       }
-
 
       if (url)
         playload = Object.assign(playload, { imageCover: url.url });
@@ -122,7 +131,9 @@ export default {
       }
 
       let cteated = yield call(createProject, playload);
+
       let response;
+
       if (cteated) {
         notification.close('imageUpload');
         notification.success({
@@ -131,6 +142,7 @@ export default {
         });
         response = yield call(loadProjects, { current: playload.current, step: playload.step });
       }
+
       if (response) {
         yield put({
           type: 'saveProjects',
@@ -138,22 +150,31 @@ export default {
         });
       }
     },
+
     * updateProject({ playload }, { call, put }) {
       let url;
       let imageList;
 
       if (playload.imageList && playload.imageList.length > 0) {
-        imageList = playload.imageList.map((item) => {
-          if (item && item.originFileObj)
-            return uploadImag(call, item.originFileObj);
-          else return item.url;
+        let list = playload.imageList;
+        notification.open({
+          message: '展示图片上传中',
+          key: 'imageUpload1',
+          duration: 0,
         });
+        imageList = yield call(uploadImages, list);
+        notification.close('imageUpload1');
       }
 
       if (playload.imageCover && playload.imageCover.imageUpload) {
+        notification.open({
+          message: '封面图片上传中',
+          key: 'imageUpload2',
+          duration: 0,
+        });
         url = yield call(uploadFile, playload.imageCover.imageData);
+        notification.close('imageUpload2');
       }
-
 
       if (url)
         playload = Object.assign(playload, { imageCover: url.url });
