@@ -114,13 +114,14 @@ export default {
         notification.close('imageUpload1');
       }
 
-      if (playload.imageCover && playload.imageCover.imageUpload) {
+      if (playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
         notification.open({
           message: '封面图片上传中',
           key: 'imageUpload2',
           duration: 0,
         });
-        url = yield call(uploadFile, playload.imageCover.imageData);
+
+        url = yield call(uploadImag, playload.imageCover.imageData.imageData);
         notification.close('imageUpload2');
       }
 
@@ -167,13 +168,14 @@ export default {
         notification.close('imageUpload1');
       }
 
-      if (playload.imageCover && playload.imageCover.imageUpload) {
+      if (playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
         notification.open({
           message: '封面图片上传中',
           key: 'imageUpload2',
           duration: 0,
         });
-        url = yield call(uploadFile, playload.imageCover.imageData);
+
+        url = yield call(uploadImag, playload.imageCover.imageData.imageData);
         notification.close('imageUpload2');
       }
 
