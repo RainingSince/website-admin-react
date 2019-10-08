@@ -89,7 +89,6 @@ export default {
 
     * createProject({ playload }, { call, put }) {
 
-
       let url;
       let imageList;
 
@@ -98,6 +97,7 @@ export default {
         key: 'imageUpload',
         duration: 0,
       });
+
 
       if (playload.imageList && playload.imageList.length > 0) {
 
@@ -122,7 +122,9 @@ export default {
       }
 
       let cteated = yield call(createProject, playload);
+
       let response;
+
       if (cteated) {
         notification.close('imageUpload');
         notification.success({
@@ -131,6 +133,7 @@ export default {
         });
         response = yield call(loadProjects, { current: playload.current, step: playload.step });
       }
+
       if (response) {
         yield put({
           type: 'saveProjects',
@@ -138,6 +141,7 @@ export default {
         });
       }
     },
+
     * updateProject({ playload }, { call, put }) {
       let url;
       let imageList;

@@ -55,7 +55,6 @@ class ProjectForm extends React.Component<{
   onSubmit = () => {
     this.props.form.validateFieldsAndScroll();
     let err = this.props.form.getFieldsError(Object.keys(defaultDetail));
-    console.log(this.props.form.getFieldsValue());
     if (!err.name)
       this.props.submitClick(this.props.dataSource.id ?
         'update' : 'add', Object.assign(this.props.dataSource, this.props.form.getFieldsValue()));
