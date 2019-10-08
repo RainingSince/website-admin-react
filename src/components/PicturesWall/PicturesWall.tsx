@@ -9,8 +9,11 @@ class PicturesWall extends React.Component<{ value?: [], onChange?: any },
   constructor(props) {
     super(props);
     const { value } = this.props;
+    const imageList = this.initImageList(value);
+    console.log(imageList);
+    console.log('---->');
     this.state = {
-      fileList: value ? value : [],
+      fileList: imageList,
       loading: false,
       previewVisible: false,
       previewImage: null,
@@ -83,6 +86,17 @@ class PicturesWall extends React.Component<{ value?: [], onChange?: any },
     this.setState({
       fileList: files,
     });
+  };
+
+  initImageList = (list) => {
+    if (!list) return [];
+
+    let images = [];
+    list.split(',').map((item, index) => {
+      images.push({ url: item, uid: index });
+    });
+
+    return images;
   };
 
 

@@ -60,12 +60,6 @@ class ProjectForm extends React.Component<{
         'update' : 'add', Object.assign(this.props.dataSource, this.props.form.getFieldsValue()));
   };
 
-  initImageList = (list) => {
-    if (!list) return [];
-    return list.replace(',').map((item, index) => {
-      return { url: item, uid: index };
-    });
-  };
 
 
   render() {
@@ -89,7 +83,7 @@ class ProjectForm extends React.Component<{
 
         <Form.Item label="项目展示图片">
           {getFieldDecorator('imageList', {
-            initialValue: this.initImageList(this.props.dataSource.imageList),
+            initialValue: this.props.dataSource.imageList,
           })(<PicturesWall/>)}
         </Form.Item>
 
