@@ -9,17 +9,18 @@ import { notification } from 'antd';
 
 
 async function uploadImag(image) {
-  console.log(image);
   let url = await uploadFile(image);
   return url.url;
 }
 
 async function uploadImages(images) {
-  return await images.map((item) => {
-    if (item && item.originFileObj)
-      return uploadImag(item.originFileObj);
-    else return item.url;
-  });
+  return await Promise.all(
+    images.map(async (item) => {
+      if (item && item.originFileObj)
+        return await uploadImag(item.originFileObj);
+      else return item.url;
+    }),
+  );
 }
 
 
