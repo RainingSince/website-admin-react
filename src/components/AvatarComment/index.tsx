@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, message, Upload } from 'antd';
 
-class AvatarComment extends React.Component<{ value?: string, onChange?: any }, { loading, imageData, imageFile }> {
+class AvatarComment extends React.Component<{ value?: string, onChange?: any }, { loading, imageCover, imageFile }> {
 
   static getDerivedStateFromProps(nextProps) {
     if ('value' in nextProps) {
@@ -14,7 +14,7 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
     super(props);
     const { value } = this.props;
     this.state = {
-      imageData: value,
+      imageCover: value,
       loading: false,
       imageFile: null,
     };
@@ -40,22 +40,29 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
   handleChange = info => {
 
     const { onChange } = this.props;
+
     this.setState({
       imageFile: info.file,
     });
+
     this.getBase64(info.file, imageData => {
+
       this.setState({
         loading: false,
+        imageCover: { imageData: this.state.imageFile, imageUpload: true, baseData: imageData },
       });
+
       if (onChange) {
         onChange({ imageData: this.state.imageFile, imageUpload: true, baseData: imageData });
       }
+
     });
 
   };
 
   render() {
-    const { imageData } = this.state;
+    const { imageCover } = this.state;
+    console.log(imageCover);
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'}/>
@@ -69,8 +76,8 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
       beforeUpload={this.beforeUpload}
       customRequest={this.handleChange}
     >
-      {(imageData || (imageData && imageData.baseData)) ?
-        <img src={imageData.baseData ? imageData.baseData : imageData} style={{ width: '100%' }}/>
+      {(imageCover || (imageCover && imageCover.baseData)) ?
+        <img src={imageCover.baseData ? imageCover.baseData : imageCover} style={{ width: '100%' }}/>
         : uploadButton}
     </Upload>;
   }

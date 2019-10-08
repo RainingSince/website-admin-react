@@ -158,14 +158,17 @@ export default {
         notification.close('imageUpload1');
       }
 
-      if (playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
+      console.log(playload);
+
+      if (playload.imageCover && playload.imageCover.imageUpload) {
+
         notification.open({
           message: '封面图片上传中',
           key: 'imageUpload2',
           duration: 0,
         });
 
-        url = yield call(uploadImag, playload.imageCover.imageData.imageData);
+        url = yield call(uploadImag, playload.imageCover.imageData);
         notification.close('imageUpload2');
       }
 
