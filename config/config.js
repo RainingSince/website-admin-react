@@ -1,17 +1,19 @@
 import { primaryColor } from '../src/defaultSettings';
 import routers from './router.config';
 
+let mode = process.env.APP_MODE;
+
 export default {
   plugins: [
     [
       'umi-plugin-react',
       {
-        chunks: ['vendors', 'umi'],
+        chunks: mode == 'build' ? ['vendors', 'umi'] : null,
         antd: true,
         dva: {
           hmr: true,
         },
-        pwa: true,
+        pwa: mode == 'build',
         targets: {
           ie: 11,
         },
@@ -38,8 +40,8 @@ export default {
     ie: 11,
   },
 
-  chainWebpack: function (config, { webpack }) {
-    config.merge({
+  chainWebpack: function(config, { webpack }) {
+    mode == 'build' ? config.merge({
       optimization: {
         minimize: true,
         splitChunks: {
@@ -57,8 +59,8 @@ export default {
             },
           },
         },
-      }
-    });
+      },
+    }) : config;
   },
   routes: routers,
   disableRedirectHoist: true,

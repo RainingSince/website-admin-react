@@ -48,7 +48,7 @@ class AvatarComment extends React.Component<{ value?: string, onChange?: any }, 
         loading: false,
       });
       if (onChange) {
-        onChange({ imageData: { imageData: this.state.imageFile, imageUpload: true, baseData: imageData } });
+        onChange({ imageData: this.state.imageFile, imageUpload: true, baseData: imageData });
       }
     });
 

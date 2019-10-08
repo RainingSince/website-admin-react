@@ -2,7 +2,7 @@ import {
   createArticle,
   deleteArticle,
   deleteArticles,
-  loadArticle, loadArticleDetail,
+  loadArticle,
   searchArticle, selectTags, updateArticle,
 } from '@/services/article';
 import { notification } from 'antd';
@@ -11,7 +11,6 @@ export default {
   namespace: 'article',
   state: {
     articles: [],
-    detail: { name: '', tagList: [], remark: '' },
   },
 
   effects: {
@@ -24,17 +23,6 @@ export default {
         });
       }
     },
-
-    * articleDetail({ playload }, { call, put }) {
-      let response = yield call(loadArticleDetail, playload);
-      if (response) {
-        yield put({
-          type: 'saveDetail',
-          playload: response,
-        });
-      }
-    },
-
     * searchArticle({ playload }, { call, put }) {
       let response = yield call(searchArticle, playload);
       if (response) {
@@ -138,9 +126,6 @@ export default {
   reducers: {
     saveArticles(state, { playload }) {
       return { ...state, articles: playload };
-    },
-    saveDetail(state, { playload }) {
-      return { ...state, detail: playload };
     },
   },
 

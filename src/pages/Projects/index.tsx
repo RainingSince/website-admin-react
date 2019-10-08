@@ -4,13 +4,14 @@ import { Icon, Popconfirm, Row, Tooltip } from 'antd';
 import { TableFilterType } from '@/components/TableFilter';
 import CustomPage from '@/components/CustomPage';
 import ProjectForm from '@/pages/Projects/comments/ProjectForm';
+import { withRouter } from 'umi';
 
 
 @connect(({ projects, loading }) => ({
   projects: projects.projects,
   submitting: loading.effects['projects/loadProjects'],
 }))
-class ProjectPage extends React.Component<{ projects, dispatch, submitting },
+class ProjectPage extends React.PureComponent<{ projects, history, dispatch, submitting },
   { drawerTitle, drawerShow, selectedItem, current, pageSize }> {
 
 
@@ -138,6 +139,10 @@ class ProjectPage extends React.Component<{ projects, dispatch, submitting },
     }
   };
 
+  itemDetail = (item) => {
+    this.props.history.push({ pathname: '/edit', query: { id: item.id, type: '2' } });
+  };
+
 
   render() {
 
@@ -169,8 +174,15 @@ class ProjectPage extends React.Component<{ projects, dispatch, submitting },
         dataIndex: '',
         render: (item) => {
           return <Row type="flex">
-            <Tooltip title="编辑项目">
+
+            <Tooltip title="编辑详情">
               <Icon type="edit" theme="twoTone" twoToneColor="#1890FF"
+                    onClick={e => this.itemDetail(item)}/>
+            </Tooltip>
+
+            <Tooltip title="修改信息">
+              <Icon type="setting" theme="twoTone" twoToneColor="#1890FF"
+                    style={{ marginLeft: '10px' }}
                     onClick={e => this.itemUpdate(item)}/>
             </Tooltip>
 
@@ -197,6 +209,8 @@ class ProjectPage extends React.Component<{ projects, dispatch, submitting },
       { type: TableFilterType.INPUT, label: '名称', dataIndex: 'name' },
     ];
 
+    console.log(projects);
+
     return <CustomPage
       tableColumns={columns}
       data={projects}
@@ -220,4 +234,4 @@ class ProjectPage extends React.Component<{ projects, dispatch, submitting },
 
 }
 
-export default ProjectPage;
+export default withRouter(ProjectPage);

@@ -71,7 +71,7 @@ class CustomPage extends Component<CustomPageProps,
     const tableOption = {
       columns: tableColumns,
       data: {
-        list: data.records,
+        list: data.records ? data.records : [],
         pagination:
           {
             total: data.total,

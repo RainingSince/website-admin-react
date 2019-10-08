@@ -2,7 +2,7 @@ import {
   createProject,
   deleteProject,
   deleteProjects,
-  loadProjects, loadProjectDetail,
+  loadProjects,
   searchProjects, updateProject, uploadFile,
 } from '@/services/project';
 import { notification } from 'antd';
@@ -28,7 +28,6 @@ export default {
   namespace: 'projects',
   state: {
     projects: [],
-    detail: { name: '', imageList: '', remark: '' },
   },
 
   effects: {
@@ -42,15 +41,6 @@ export default {
       }
     },
 
-    * projectDetail({ playload }, { call, put }) {
-      let response = yield call(loadProjectDetail, playload);
-      if (response) {
-        yield put({
-          type: 'saveDetail',
-          playload: response,
-        });
-      }
-    },
 
     * searchProjects({ playload }, { call, put }) {
       let response = yield call(searchProjects, playload);
@@ -114,14 +104,14 @@ export default {
         notification.close('imageUpload1');
       }
 
-      if (playload.imageCover.imageData && playload.imageCover.imageData.imageUpload) {
+      if (playload.imageCover && playload.imageCover.imageUpload) {
         notification.open({
           message: '封面图片上传中',
           key: 'imageUpload2',
           duration: 0,
         });
 
-        url = yield call(uploadImag, playload.imageCover.imageData.imageData);
+        url = yield call(uploadImag, playload.imageCover.imageData);
         notification.close('imageUpload2');
       }
 
@@ -180,7 +170,7 @@ export default {
       }
 
       if (url)
-        playload = Object.assign(playload, { imageCover: url.url });
+        playload = Object.assign(playload, { imageCover: url });
 
       if (imageList && imageList.length > 0) {
         playload = Object.assign(playload, { imageList: imageList.join(',') });
@@ -206,10 +196,7 @@ export default {
 
   reducers: {
     saveProjects(state, { playload }) {
-      return { ...state, Projects: playload };
-    },
-    saveDetail(state, { playload }) {
-      return { ...state, detail: playload };
+      return { ...state, projects: playload };
     },
   },
 

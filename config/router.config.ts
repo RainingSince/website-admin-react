@@ -9,10 +9,10 @@ export default [
     ],
   },
   {
-    path: '/article/edit',
+    path: '/edit',
     component: '../layouts/UserLayout',
     routes: [
-      { path: '/article/edit', name: '编辑', component: './Article/ArticleEdit' },
+      { path: '/edit', name: '编辑', component: './DetailEdit' },
     ],
   },
   {

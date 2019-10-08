@@ -134,7 +134,7 @@ class ArticlePage extends Component<{ articles, dispatch, catalogs, history },
   };
 
   itemDetail = (item) => {
-    this.props.history.push({ pathname: '/article/edit', query: { id: item.id } });
+    this.props.history.push({ pathname: '/edit', query: { id: item.id, type: '1' } });
   };
 
   pageChange = (value) => {
