@@ -16,6 +16,7 @@ export default {
       }
     },
 
+
     * updateArticle({ playload }, { call, put }) {
 
       let update = yield call(updateArticle, playload);

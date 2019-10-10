@@ -11,7 +11,7 @@ class ArticleEdit extends React.PureComponent<{ detail, dispatch, history }, { m
   constructor(props) {
     super(props);
     this.state = {
-      markdown: this.props.detail.content,
+      markdown: null,
       type: '1',
     };
   }
@@ -50,7 +50,13 @@ class ArticleEdit extends React.PureComponent<{ detail, dispatch, history }, { m
   };
 
   render() {
+
     const { detail } = this.props;
+
+    if(!this.state.markdown){
+      this.setState({markdown:detail.content})
+    }
+
 
     return <div style={{ margin: '0 30px', display: 'flex', flexDirection: 'column' }}>
 
@@ -61,7 +67,7 @@ class ArticleEdit extends React.PureComponent<{ detail, dispatch, history }, { m
 
       <MdEditor
         height='85vh'
-        value={detail.content}
+        value={this.state.markdown}
         onChange={this.updateMarkDown}
         onSave={this.saveMarkDown}
       />
