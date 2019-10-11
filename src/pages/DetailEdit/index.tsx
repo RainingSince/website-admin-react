@@ -53,8 +53,8 @@ class ArticleEdit extends React.PureComponent<{ detail, dispatch, history }, { m
 
     const { detail } = this.props;
 
-    if(!this.state.markdown){
-      this.setState({markdown:detail.content})
+    if (this.state.markdown == null) {
+      this.setState({ markdown: detail.content });
     }
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { connect } from 'dva';
 
+
 const { Option } = Select;
 
 
@@ -19,10 +20,10 @@ const { Option } = Select;
         // @ts-ignore
         value: props.dataSource.remark,
       }),
-      tagList: Form.createFormField({
-        name: 'tagList',
+      tagIds: Form.createFormField({
+        name: 'tagIds',
         // @ts-ignore
-        valus: props.dataSource.tagList,
+        valus: props.dataSource.tagIds,
       }),
       catalogName: Form.createFormField({
         name: 'catalogName',
@@ -64,7 +65,7 @@ class ArticleForm extends React.Component<{
 
   catalogChange = (id) => {
     if (this.props.dataSource.catalogId != id) {
-      this.props.dataSource.tagList = [];
+      this.props.dataSource.tagIds = [];
     }
     this.loadTags(id);
   };
@@ -148,8 +149,8 @@ class ArticleForm extends React.Component<{
 
 
         <Form.Item label="标签">
-          {getFieldDecorator('tagList', {
-            initialValue: this.props.dataSource.tagList,
+          {getFieldDecorator('tagIds', {
+            initialValue: this.props.dataSource.tagIds,
           })(this.renderTagsList())}
         </Form.Item>
 
